@@ -11,23 +11,38 @@ def student_list(request):
     serialized_students = StudentSerializer(students).all_students
     return JsonResponse(data=serialized_students, status=200)
 
-
-def student_detail(request):
+def student_detail(request, student_id):
     student = Student.objects.get(id=student_id)
     serialized_students = StudentSerializer(student).student_detail
-    return JsonResponse(data=serialized_wine, status=200)
+    return JsonResponse(data=serialized_students, status=200)
 
 @csrf_exempt
 def new_student(request):
-    pass
+    if request.method == "POST":
+        data = json.load(request)
+        form = StudentForm(data)
+        if form.is_valid():
+            student = form.save(commit=True)
+            serialized_students = StudentSerializer(student).student_detail
+            return JsonResponse(data=serialized_students, status=200)
 
 @csrf_exempt
-def edit_student(request):
-    pass
+def edit_student(request, student_id):
+    student = Student.objects.get(id=student_id)
+    if request.method == "POST":
+        data = json.load(request)
+        form = StudentForm(data, instance=student)
+        if form.is_valid():
+            student = form.save(commit=True)
+            serialized_student = StudentSerializer(student).student_detail
+            return JsonResponse(data=serialized_student, status=200)
 
 @csrf_exempt
-def delete_student(request):
-    pass
+def delete_student(request, student_id):
+    if request.method == "POST":
+        student = Student.objects.get(id=student_id)
+        student.delete()
+    return JsonResponse(data={'status': 'Successfully deleted student.'}, status=200)
 
 
 

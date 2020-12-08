@@ -21,9 +21,9 @@ class StudentSerializer(object):
     @property
     def student_detail(self):
         return {
-            'first_name': student.first_name,
-            'last_name': student.last_name,
-            'birthdate': student.birthdate,
-            'email': student.email
+            'first_name': self.info.first_name,
+            'last_name': self.info.last_name,
+            'birthdate': self.info.birthdate,
+            'email': self.info.email
         }
 
